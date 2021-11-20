@@ -28,14 +28,26 @@ class PveExporterApplication:
 
         self._log = logging.getLogger(__name__)
 
-    def on_pve(self, module='default', target='localhost'):
+    def on_pve(self, target=None, module='default'):
         """
         Request handler for /pve route
         """
 
         if module in self._config:
+            config = dict(self._config[module])
+
+            if 'host' in config:
+                host = config.get('host')
+                config.pop('host')
+            elif target == None:
+                response = Response("No target parameter set and host not present in config")
+                response.status_code = 400
+                return response
+            else:
+                host = target
+
             start = time.time()
-            output = collect_pve(self._config[module], target, self._collectors)
+            output = collect_pve(config, host, self._collectors)
             response = Response(output)
             response.headers['content-type'] = CONTENT_TYPE_LATEST
             self._duration.labels(module).observe(time.time() - start)

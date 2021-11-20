@@ -77,6 +77,7 @@ sockets on dual stacked machines.
 Visit http://localhost:9221/pve?target=1.2.3.4 where 1.2.3.4 is the IP
 of the Proxmox VE node to get metrics from. Specify the ``module``
 request parameter, to choose which module to use from the config file.
+Host/target can also be set in the config, instead of as a request parameter, therefore cleaning up the metrics url.
 
 The ``target`` request parameter defaults to ``localhost``. Hence if
 ``pve_exporter`` is deployed directly on the proxmox host, ``target``
@@ -105,6 +106,8 @@ Example ``pve.yml`` for password authentication:
         password: sEcr3T!
         # Optional: set to false to skip SSL/TLS verification
         verify_ssl: true
+        # Optional: if present, will be used instead of target (which is unnecessary then)
+        host: 10.0.10.1
 
 Example ``pve.yml`` for `token authentication`_:
 
